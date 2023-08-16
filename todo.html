@@ -1,0 +1,161 @@
+<html>
+
+<head>
+    <title>To Do List</title>
+    <style>
+        H1 {
+            background-color: black;
+            margin: 0px;
+            padding: 16px;
+            text-align: center;
+            color: white;
+        }
+
+        h4 {
+            text-align: center;
+        }
+
+        body {
+            margin: 0px;
+
+        }
+
+
+        .body {
+            text-align: center;
+            /* margin-top: 100px; */
+        }
+
+        button {
+            border: 0px;
+            margin: 8px;
+            padding: 4px;
+            background-color: black;
+            color: white;
+            width: 50px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        ul li {
+            /* margin-left: 555px; */
+            list-style-type: square;
+        }
+
+        #center {
+            /* position: fixed; */
+            text-align: center;
+            margin-left: 40%;
+            margin-right: 60%;
+        }
+
+        #main {
+            display: grid;
+            align-items: center;
+            align-content: center;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 1ex;
+            border: 1px solid black;
+            margin-left: 35%;
+            margin-right: 35%;
+            margin-top: 10px;
+            padding: 10px;
+            box-shadow: 10px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <H1>To DO List </H1>
+    </header>
+    <main>
+        <div id="main">
+            <div class="body">
+                <b><label for="Task">To Do Task:</label></b>
+                <input type="text" id="Task" value="" placeholder="Add Task">
+                <button onclick="addData()">ADD</button>
+                <hr color="black">
+            </div>
+            <div id="center">
+                <b>
+                    <h4>TASKS:</h4>
+                </b>
+            </div>
+            <div id="undone-tasks">
+
+            </div>
+            <div id="task-editor" style="display: none;">
+                <input type="text" id="EditTask" value="" placeholder="Edit Task">
+                <button onclick="saveEdit()">Save</button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        var tasksList = [];
+        var currentEditIndex = -1;
+    
+        function addData() {
+            var taskInput = document.getElementById("Task");
+            var taskName = taskInput.value.trim();
+            
+            if (taskName === "") {
+                alert("Please Enter Task");
+                return;
+            }
+            
+            var task = { name: taskName };
+            tasksList.push(task);
+            taskInput.value = "";
+    
+            updateTaskList();
+        }
+    
+        function updateTaskList() {
+            var taskList = document.getElementById("undone-tasks");
+            taskList.innerHTML = "";
+    
+            tasksList.forEach(function (task, index) {
+                var newTask = document.createElement("li");
+                newTask.textContent = task.name;
+    
+                var editButton = document.createElement("button");
+                editButton.textContent = "Edit";
+                editButton.addEventListener("click", function () {
+                    openEdit(index);
+                });
+    
+                newTask.appendChild(editButton);
+                taskList.appendChild(newTask);
+            });
+        }
+    
+        function openEdit(index) {
+            var taskEditor = document.getElementById("task-editor");
+            var editInput = document.getElementById("EditTask");
+            editInput.value = tasksList[index].name;
+            
+            currentEditIndex = index;
+            taskEditor.style.display = "block";
+        }
+    
+        function saveEdit() {
+            var editInput = document.getElementById("EditTask");
+            var editedTaskName = editInput.value.trim();
+      
+            
+            if (editedTaskName !== "") {
+                tasksList[currentEditIndex].name = editedTaskName;
+                currentEditIndex = -1;
+                editInput.value = "";
+                document.getElementById("task-editor").style.display = "none";
+                updateTaskList();
+            }
+        }
+    </script>
+</body>
+
+</html>
