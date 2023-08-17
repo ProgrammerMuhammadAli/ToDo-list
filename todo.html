@@ -3,6 +3,52 @@
 <head>
     <title>To Do List</title>
     <style>
+        @media (min-width: 480px) {
+            body {
+                margin: 0px;
+
+            }
+        }
+
+        @media (min-width: 700px) {
+            body {
+                margin: 0px;
+            }
+
+            .body {
+                text-align: center;
+                margin-left: 20%;
+                margin-right: 20%;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            #main {
+                display: grid;
+                align-items: center;
+                align-content: center;
+                text-align: center;
+                border-radius: 5px;
+                border: 1px solid black;
+                margin-left: 60%;
+                margin-right: 60%;
+                margin-top: 10px;
+                padding: 10px;
+                box-shadow: 10px 10px 10px 5px;
+                height: auto;
+                width: auto;
+                padding-bottom: 200px;
+                background-color: rgb(29, 29, 29);
+            }
+
+            .body {
+                text-align: center;
+                margin-left: 20%;
+                margin-right: 20%;
+            }
+        }
+
+
         H1 {
             background-color: black;
             margin: 0px;
@@ -17,35 +63,60 @@
 
         body {
             margin: 0px;
-
+            background-color: rgb(198, 198, 1);
         }
 
 
         .body {
             text-align: center;
-            /* margin-top: 100px; */
         }
 
-        button {
+        #button {
             border: 0px;
             margin: 8px;
             padding: 4px;
-            background-color: black;
-            color: white;
+            background-color: white;
+            color: black;
             width: 50px;
             height: 30px;
             cursor: pointer;
             border-radius: 6px;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         }
 
-        ul li {
+        button {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            border: 1px solid black;
+            margin: 8px;
+            padding: 4px;
+            background-color: white;
+            color: black;
+            height: 30px;
+            width: 110px;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        li {
             /* margin-left: 555px; */
-            list-style-type: square;
+            /* list-style-type: square; */
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            flex-direction: row;
+            justify-content: space-between;
+            color: white;
         }
 
         #center {
             /* position: fixed; */
             text-align: center;
+            margin-left: 40%;
+            margin-right: 60%;
+        }
+
+        #doneTasks {
+            /* text-align: center; */
             margin-left: 40%;
             margin-right: 60%;
         }
@@ -56,31 +127,50 @@
             align-content: center;
             text-align: center;
             border-radius: 5px;
-            border: 1px solid black;
-            margin-left: 35%;
-            margin-right: 35%;
+            /* border: 1px solid black; */
+            margin-left: 25%;
+            margin-right: 25%;
             margin-top: 10px;
             padding: 10px;
             box-shadow: 10px 10px 10px 5px;
+            height: auto;
+            /* width: auto; */
+            padding-bottom: 200px;
+            background-color: rgb(39, 39, 39)  ;
+        }
+
+        #div {
+            margin-left: 1000px;
+        }
+
+        #done {
+            text-decoration: line-through;
+            display: flex;
+            justify-content: center;
+        }
+        #undone-tasks {
+            padding: 20px;
         }
     </style>
+    <link rel="icon" type="image/jpg" href="favicon.ico" />
 </head>
 
 <body>
-    <header>
+    <!-- <header>
         <H1>To DO List </H1>
-    </header>
+    </header> -->
     <main>
         <div id="main">
             <div class="body">
-                <b><label for="Task">To Do Task:</label></b>
+                <img src="logo__1.png" alt="ToDo-Logo" style="background-color: white; ">
+                <!-- <b><label for="Task">To Do Task:</label></b> -->
                 <input type="text" id="Task" value="" placeholder="Add Task">
-                <button onclick="addData()">ADD</button>
+                <button onclick="addData()" id="button">ADD</button>
                 <hr color="black">
             </div>
             <div id="center">
                 <b>
-                    <h4>TASKS:</h4>
+                    <h4 style="color: white; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">TASKS:</h4>
                 </b>
             </div>
             <div id="undone-tasks">
@@ -88,7 +178,12 @@
             </div>
             <div id="task-editor" style="display: none;">
                 <input type="text" id="EditTask" value="" placeholder="Edit Task">
-                <button onclick="saveEdit()">Save</button>
+                <button onclick="saveEdit()" id="button">Save</button>
+            </div>
+
+            <div id="doneTasks">
+                <h4 style="color: white; font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">COMPLETED</h4>
+                <ul id="done"></ul>
             </div>
 
         </div>
@@ -97,56 +192,63 @@
     <script>
         var tasksList = [];
         var currentEditIndex = -1;
-    
+
         function addData() {
             var taskInput = document.getElementById("Task");
             var taskName = taskInput.value.trim();
-            
+
             if (taskName === "") {
                 alert("Please Enter Task");
                 return;
             }
-            
+
             var task = { name: taskName };
             tasksList.push(task);
             taskInput.value = "";
-    
+
             updateTaskList();
         }
-    
+
         function updateTaskList() {
             var taskList = document.getElementById("undone-tasks");
             taskList.innerHTML = "";
-    
+
             tasksList.forEach(function (task, index) {
                 var newTask = document.createElement("li");
                 newTask.textContent = task.name;
-    
+
+                var doneButton = document.createElement("button");
+                doneButton.textContent = "Done"
+                doneButton.addEventListener("click", function () {
+                    doneTasks(index)
+                })
                 var editButton = document.createElement("button");
                 editButton.textContent = "Edit";
                 editButton.addEventListener("click", function () {
                     openEdit(index);
                 });
-    
+
+
+                newTask.appendChild(doneButton);
                 newTask.appendChild(editButton);
                 taskList.appendChild(newTask);
             });
         }
-    
+
         function openEdit(index) {
             var taskEditor = document.getElementById("task-editor");
             var editInput = document.getElementById("EditTask");
             editInput.value = tasksList[index].name;
-            
+
             currentEditIndex = index;
             taskEditor.style.display = "block";
         }
-    
+
         function saveEdit() {
             var editInput = document.getElementById("EditTask");
             var editedTaskName = editInput.value.trim();
-      
-            
+
+
             if (editedTaskName !== "") {
                 tasksList[currentEditIndex].name = editedTaskName;
                 currentEditIndex = -1;
@@ -154,6 +256,19 @@
                 document.getElementById("task-editor").style.display = "none";
                 updateTaskList();
             }
+        }
+
+        function doneTasks(index) {
+            var doneTaskList = document.getElementById("done");
+            var doneTask = tasksList.splice(index, 1)[0];
+            updateTaskList();
+            updateDoneTasksList(doneTask, doneTaskList);
+        }
+
+        function updateDoneTasksList(task, list) {
+            var doneTaskItem = document.createElement("li");
+            doneTaskItem.textContent = task.name;
+            list.appendChild(doneTaskItem);
         }
     </script>
 </body>
